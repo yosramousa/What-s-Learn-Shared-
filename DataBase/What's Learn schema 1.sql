@@ -28,14 +28,6 @@ create table [Admin]
 	IsActive bit not null 
 )
 
---create table UserSkill
---(
---	ID int primary key not null identity , 
---	[Name] nvarchar(100),
---	UserID int foreign key 
-
---)
-
 Create table MainCategory (
 	ID int primary key not null identity , 
 	[Name] nvarchar(250) not null ,
@@ -133,8 +125,14 @@ Create table Course (
 	ID int primary key not null identity , 
 	[Name] nvarchar(250) not null ,
 	Discription nvarchar(1000) not null ,
-	TrackID int FOREIGN KEY REFERENCES Track(ID)
 	   
+)
+
+create table TaskCourse(
+	ID int primary key not null identity , 
+	TrackID int not null FOREIGN KEY REFERENCES  Track(ID),
+	CourseID int not null FOREIGN KEY REFERENCES  Course(ID),
+	unique (TrackID,CourseID)	
 )
 
 Create table  CourseLink (
@@ -204,8 +202,22 @@ create table UserSkill
 	unique (SkillID,UserID)
 )
 
+create table [Message] 
+(
+	ID int primary key identity ,
+	Email nvarchar(50) not null  ,
+	[Message] nvarchar(1000) not null ,
+	[Date] Datetime not null ,
+	IsRead bit not null default 0
+)
 
 
-ALTER TABLE FinishedCourseADD CONSTRAINT K_FinishedCourse UNIQUE (CourseID,UserTrackID); 
+ALTER TABLE FinishedCourseAdd CONSTRAINT UK_FinishedCourse 
+UNIQUE (CourseID,UserTrackID); 
 
 drop table UserSkill
+
+alter table Course add IsDeleted bit not null default 0
+
+alter table[dbo].[UserSocialLink] alter column UserID int not null
+
